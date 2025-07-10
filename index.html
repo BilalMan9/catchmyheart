@@ -27,9 +27,19 @@
       cursor: pointer;
     }
 
-    #scoreBoard {
+    #title {
       position: absolute;
       top: 10px;
+      width: 100%;
+      text-align: center;
+      font-size: 30px;
+      color: crimson;
+      font-weight: bold;
+    }
+
+    #scoreBoard {
+      position: absolute;
+      top: 60px;
       left: 10px;
       font-size: 24px;
       color: crimson;
@@ -63,11 +73,12 @@
 </head>
 <body>
   <div id="game">
+    <div id="title">Click My Heart 💘</div>
     <div id="scoreBoard">Score: 0</div>
 
     <!-- Message with image -->
     <div id="message">
-      <img src="./larki3.png" alt="Love Picture" />
+      <img src="https://cdn-icons-png.flaticon.com/512/4140/4140037.png" alt="Love Picture" />
       You clicked all my hearts 💖<br>I love you!
     </div>
   </div>
@@ -78,6 +89,7 @@
     const message = document.getElementById("message");
 
     let score = 0;
+    let heartInterval;
 
     function dropHeart() {
       const heart = document.createElement("div");
@@ -86,32 +98,34 @@
       heart.style.top = "-40px";
       game.appendChild(heart);
 
-      // Falling animation
       let heartTop = 0;
       const fall = setInterval(() => {
         heartTop += 2;
         heart.style.top = heartTop + "px";
 
         if (heartTop > window.innerHeight) {
-          game.removeChild(heart);
+          if (heart.parentNode) {
+            heart.remove();
+          }
           clearInterval(fall);
         }
       }, 20);
 
-      // Click to catch
       heart.addEventListener("click", () => {
         score++;
         scoreBoard.textContent = `Score: ${score}`;
-        game.removeChild(heart);
+        heart.remove();
         clearInterval(fall);
 
         if (score >= 10) {
+          clearInterval(heartInterval); // Stop dropping hearts
           message.style.display = "block";
         }
       });
     }
 
-    setInterval(dropHeart, 1000);
+    // Start dropping hearts every second
+    heartInterval = setInterval(dropHeart, 1000);
   </script>
 </body>
 </html>
